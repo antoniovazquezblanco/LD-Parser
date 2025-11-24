@@ -1,0 +1,11 @@
+# Java
+.classpath
+.gradle
+.project
+.settings
+bin/
+dist/
+build/
+
+# Antlr
+.antlr/
