@@ -22,4 +22,12 @@ public class ScriptBuilderVisitor {
         List<Command> commands = new ArrayList<>();
         return new Script(commands);
     }
+    
+    private Command visitCommand(LDScriptParser.CommandContext ctx) {
+        return visitCommand_provide(ctx.command_provide());
+    }
+
+    private ProvideCommand visitCommand_provide(LDScriptParser.Command_provideContext ctx) {
+        return null;
+    }
 }
