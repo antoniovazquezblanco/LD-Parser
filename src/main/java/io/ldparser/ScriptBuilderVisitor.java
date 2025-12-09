@@ -28,6 +28,8 @@ public class ScriptBuilderVisitor {
     }
 
     private ProvideCommand visitCommand_provide(LDScriptParser.Command_provideContext ctx) {
-        return null;
+        String symbolName = ctx.SYMBOL_NAME().getText();
+        Expression expression = null;
+        return new ProvideCommand(symbolName, expression);
     }
 }
