@@ -27,12 +27,27 @@ public class ScriptBuilderVisitor {
     }
     
     private Command visitCommand(LDScriptParser.CommandContext ctx) {
-        return visitCommand_provide(ctx.command_provide());
+        return visitCommandProvide(ctx.commandProvide());
     }
 
-    private ProvideCommand visitCommand_provide(LDScriptParser.Command_provideContext ctx) {
-        String symbolName = ctx.SYMBOL_NAME().getText();
-        Expression expression = null;
+    private ProvideCommand visitCommandProvide(LDScriptParser.CommandProvideContext ctx) {
+        String symbolName = visitSymbolName(ctx.symbolName());
+        Expression expression = visitExpression(ctx.expression());
         return new ProvideCommand(symbolName, expression);
+    }
+
+    private String visitSymbolName(LDScriptParser.SymbolNameContext ctx) {
+        if (ctx.SYMBOL_NAME_UNQUOTED() != null) {
+            return ctx.SYMBOL_NAME_UNQUOTED().getText();
+        } else if (ctx.SYMBOL_NAME_QUOTED() != null) {
+            String text = ctx.SYMBOL_NAME_QUOTED().getText();
+            // Remove quotes
+            return text.substring(1, text.length() - 1);
+        }
+        throw new IllegalArgumentException("Unknown symbol name type");
+    }
+
+    private Expression visitExpression(LDScriptParser.ExpressionContext ctx) {
+        return null;
     }
 }

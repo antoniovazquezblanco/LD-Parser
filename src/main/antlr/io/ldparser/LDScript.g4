@@ -9,24 +9,29 @@ options {
 // Lexer
 COMMENTS : '/*' .*? '*/' -> skip;
 WHITESPACES : [ \t\r\n]+ -> skip;
-SYMBOL_NAME : [a-zA-Z_][a-zA-Z0-9_]*;
-IMMEDIATE_STRING : '"' (~["\\] | '\\' .)* '"';
-IMMEDIATE_NUMBER_DEC : [0-9]+;
-IMMEDIATE_NUMBER_HEX : '0x'[0-9a-fA-F]+;
+// https://users.informatik.haw-hamburg.de/~krabat/FH-Labor/gnupro/5_GNUPro_Utilities/c_Using_LD/ldLinker_scripts.html#Symbol_names
+SYMBOL_NAME_UNQUOTED : [a-zA-Z_.][a-zA-Z0-9_.\-]*;
+SYMBOL_NAME_QUOTED : '"' (~["\\] | '\\' .)* '"';
+// https://users.informatik.haw-hamburg.de/~krabat/FH-Labor/gnupro/5_GNUPro_Utilities/c_Using_LD/ldLinker_scripts.html#Constants
+CONSTANT_OCT : '0'[0-7]+;
+CONSTANT_DEC : [1-9][0-9]*[KM]?;
+CONSTANT_HEX : '0x'[0-9a-fA-F]+;
 
 // Parser
 script : command* EOF;
 
-command : command_provide ';';
+command : commandProvide ';';
 
-command_provide : 'PROVIDE' '(' SYMBOL_NAME '=' expression ')';
+commandProvide : 'PROVIDE' '(' symbolName '=' expression ')';
 
-expression : '.'
-           | immediate_number
-           | SYMBOL_NAME
-           | IMMEDIATE_STRING
+expression : constant
            ;
 
-immediate_number : IMMEDIATE_NUMBER_DEC
-                 | IMMEDIATE_NUMBER_HEX
-                 ;
+constant : CONSTANT_OCT
+         | CONSTANT_DEC
+         | CONSTANT_HEX
+         ;
+
+symbolName : SYMBOL_NAME_UNQUOTED
+           | SYMBOL_NAME_QUOTED
+           ;
