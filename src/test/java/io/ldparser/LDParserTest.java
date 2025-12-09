@@ -16,8 +16,8 @@ public class LDParserTest {
         assertTrue(parsed.getCommands().get(0) instanceof ProvideCommand);
         ProvideCommand cmd = (ProvideCommand) parsed.getCommands().get(0);
         assertEquals("foo", cmd.getSymbolName());
-        // TODO
-        // assertTrue(cmd.getExpression() instanceof NumberExpression);
-        // assertEquals(42, ((NumberExpression) cmd.getExpression()).getValue());
+        assertNotNull(cmd.getExpression());
+        assertEquals("42", cmd.getExpression().getExpressionString());
+        assertEquals(42, cmd.getExpression().getNumericalValue());
     }
 }

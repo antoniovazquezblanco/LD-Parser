@@ -48,6 +48,30 @@ public class ScriptBuilderVisitor {
     }
 
     private Expression visitExpression(LDScriptParser.ExpressionContext ctx) {
-        return null;
+        LDScriptParser.ConstantContext constantCtx = ctx.constant();
+        String expressionString = constantCtx.getText();
+        long numericalValue = visitConstant(constantCtx);
+        return new Expression(expressionString, numericalValue);
+    }
+
+    private long visitConstant(LDScriptParser.ConstantContext ctx) {
+        if (ctx.CONSTANT_OCT() != null) {
+            String text = ctx.CONSTANT_OCT().getText();
+            return Long.parseLong(text, 8);
+        } else if (ctx.CONSTANT_DEC() != null) {
+            String text = ctx.CONSTANT_DEC().getText();
+            // Handle optional K/M suffix
+            char lastChar = text.charAt(text.length() - 1);
+            long multiplier = 1;
+            if (lastChar == 'K' || lastChar == 'M') {
+                text = text.substring(0, text.length() - 1);
+                multiplier = (lastChar == 'K') ? 1024 : 1024 * 1024;
+            }
+            return Long.parseLong(text) * multiplier;
+        } else if (ctx.CONSTANT_HEX() != null) {
+            String text = ctx.CONSTANT_HEX().getText();
+            return Long.parseLong(text.substring(2), 16);
+        }
+        throw new IllegalArgumentException("Unknown constant type");
     }
 }
