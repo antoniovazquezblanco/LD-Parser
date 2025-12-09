@@ -20,6 +20,9 @@ public class ScriptBuilderVisitor {
 
     private Script visitScript(LDScriptParser.ScriptContext ctx) {
         List<Command> commands = new ArrayList<>();
+        for (LDScriptParser.CommandContext cmdCtx : ctx.command()) {
+            commands.add(visitCommand(cmdCtx));
+        }
         return new Script(commands);
     }
     
