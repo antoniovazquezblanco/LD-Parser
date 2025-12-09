@@ -1,5 +1,7 @@
 grammar LDScript;
 
+@header{ package io.ldparser; }
+
 options {
     caseInsensitive = false;
 }
